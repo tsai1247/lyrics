@@ -1,4 +1,7 @@
-# base
+# lyrics
+## Description
+* 放歌詞的地方
+* 因為有些Marumaru沒有
 
 ## Project setup
 
