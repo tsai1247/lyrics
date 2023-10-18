@@ -31,7 +31,7 @@
 import { ref, computed } from 'vue';
 import lyrics from '@/assets/lyrics.json'
 
-const playing = ref(null);
+const playing = ref(lyrics[0]);
 const notSupport = computed(() => {
   return `未支援的格式: ${playing.value.lyrics}`;
 });
