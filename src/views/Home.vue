@@ -1,28 +1,45 @@
 <template>
   <div>
-    <v-autocomplete
-      v-model="playing"
-      :items="lyrics"
-      item-title="name"
-      return-object
-    ></v-autocomplete>
-    <div
-      class="playing-lyrics"
-      v-if="playing"
-    >
-      <div
-        v-if="playing.format === 'ruby'"
-        v-html="playing.lyrics"
-      >
-      </div>
-      <div
-        v-else-if="playing.format === 'docs'"
-        v-html="formattedlyrics"
-      >
-      </div>
-      <div v-else>{{ notSupport }}</div>
-    </div>
+    <v-row>
+      <v-col cols="2">
+        <!-- 曲名 -->
+        <v-autocomplete
+          label="曲名"
+          v-model="playing"
+          :items="lyrics"
+          item-title="name"
+          return-object
+        ></v-autocomplete>
+      </v-col>
 
+      <v-col cols="2">
+        <!-- 曲名 -->
+        <v-checkbox
+          label="顯示假名"
+          v-model="showHirakana"
+        >
+        </v-checkbox>
+      </v-col>
+
+      <v-col cols="12">
+        <div
+          class="playing-lyrics"
+          v-if="playing"
+        >
+          <div
+            v-if="playing.format === 'ruby'"
+            v-html="formatLyric(playing.lyrics)"
+          >
+          </div>
+          <div
+            v-else-if="playing.format === 'docs'"
+            v-html="formatLyric(docsLyrics)"
+          >
+          </div>
+          <div v-else>{{ notSupport }}</div>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 
 </template>
@@ -36,7 +53,7 @@ const notSupport = computed(() => {
   return `未支援的格式: ${playing.value.lyrics}`;
 });
 
-const formattedlyrics = computed( () => {
+const docsLyrics = computed( () => {
   const tmpList = [];
   let start = 0;
   for (let i = 0; i < playing.value.lyrics.length; i++) {
@@ -100,6 +117,22 @@ const formattedlyrics = computed( () => {
 
   return ret;
 });
+
+const showHirakana = ref(true);
+function formatLyric (lyric) {
+  if (showHirakana.value) {
+    return lyric;
+  }
+
+  let ret = lyric;
+  while(ret.indexOf("<rt>") >= 0) {
+    const start = ret.indexOf("<rt>");
+    const end = ret.indexOf("</rt>");
+    ret = ret.slice(0, start) + ret.slice(end + 5);
+  }
+
+  return ret;
+}
 </script>
 
 <style scoped>
